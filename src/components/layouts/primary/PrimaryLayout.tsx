@@ -28,7 +28,7 @@ const PrimaryLayout: React.FC<IPrimaryLayout> = ({ children }) => {
                 <title>{'PromptMan.io'}</title>
             </Head>
             <Layout className={[styles.layout, "font-mono"]}>
-                <Header className="flex flex-col top-0 left-0 fixed w-full">
+                <Header className="flex flex-col top-0 left-0 fixed w-full z-50">
                     <NavMenu />
                 </Header>
                 <Content className="flex min-h-screen flex-col items-center justify-between p-24">
