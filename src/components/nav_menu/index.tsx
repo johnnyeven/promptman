@@ -1,13 +1,14 @@
 import { Menu } from "@arco-design/web-react";
+import Link from "next/link";
 
 const MenuItem = Menu.Item;
 
-export default function NavMenu() {
+export default function NavMenu({ activeIndex = "1" }) {
     return (
-        <Menu mode='horizontal' theme='dark' defaultSelectedKeys={['1']}>
-            <MenuItem key='1'>Home</MenuItem>
-            <MenuItem key='2'>Gallery</MenuItem>
-            <MenuItem key='3'>Editor</MenuItem>
+        <Menu mode='horizontal' theme='dark' defaultSelectedKeys={[activeIndex]}>
+            <MenuItem key='1'><Link href={'/'}>Home</Link></MenuItem>
+            <MenuItem key='2'><Link href={'/gallery'}>Gallery</Link></MenuItem>
+            <MenuItem key='3'><Link href={'/editor'}>Editor</Link></MenuItem>
         </Menu>
     );
 }
