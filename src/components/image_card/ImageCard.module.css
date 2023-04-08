@@ -1,0 +1,19 @@
+.image-card-indicator-root {
+    
+}
+
+.image-card-root {
+    outline: 0px;
+    -webkit-tap-highlight-color: transparent;
+    display: block;
+    text-decoration: none;
+    color: rgb(193, 194, 197);
+    box-sizing: border-box;
+    border-radius: 4px;
+    box-shadow: rgba(0, 0, 0, 0.05) 0 1px 3px, rgba(0, 0, 0, 0.05), 0 10px 15px -5px, rgba(0, 0, 0, 0.04) 0 7px 7px -5px;
+    border: 1px solid rgb(55, 58, 64);
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(rgb(134, 46, 156) 0%, rgb(37, 38, 43) 100%);
+    padding: 0;
+}

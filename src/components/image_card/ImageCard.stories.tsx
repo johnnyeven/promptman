@@ -3,7 +3,7 @@ import ImageCard, { IImageCard } from './ImageCard';
 import { mockImageCardProps } from './ImageCard.mocks'
 
 export default {
-    title: 'templates/ImageCard',
+    title: 'components/ImageCard',
     component: ImageCard,
     argTypes: {},
 } as ComponentMeta<typeof ImageCard>;

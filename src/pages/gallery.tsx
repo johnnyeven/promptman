@@ -1,20 +1,36 @@
-import { Layout } from "@arco-design/web-react";
-import NavMenu from '@/components/nav_menu';
+import { Space } from "@arco-design/web-react";
+import { NextPageWithLayout } from "./page";
+import PrimaryLayout from "@/components/layouts/primary/PrimaryLayout";
+import ImageCard from "@/components/image_card/ImageCard";
+import { mockImageCardProps } from "@/components/image_card/ImageCard.mocks";
 
-import "@arco-design/web-react/dist/css/arco.css";
-
-const Header = Layout.Header;
-const Content = Layout.Content;
-
-export default function Gallery() {
+const Gallery: NextPageWithLayout = () => {
     return (
-        <Layout className="font-mono">
-            <Header className="flex flex-col top-0 left-0 fixed w-full">
-                <NavMenu activeIndex={"2"} />
-            </Header>
-            <Content>
-
-            </Content>
-        </Layout>
+        <>
+            <Space size={20}>
+                <Space direction="vertical" size={20}>
+                    <ImageCard {...mockImageCardProps.base} />
+                </Space>
+                <Space direction="vertical" size={20}>
+                    <ImageCard {...mockImageCardProps.base} />
+                </Space>
+                <Space direction="vertical" size={20}>
+                    <ImageCard {...mockImageCardProps.base} />
+                </Space>
+                <Space direction="vertical" size={20}>
+                    <ImageCard {...mockImageCardProps.base} />
+                </Space>
+            </Space>
+        </>
     )
+};
+
+export default Gallery;
+
+Gallery.getLayout = (page) => {
+    return (
+        <PrimaryLayout>
+            {page}
+        </PrimaryLayout>
+    );
 }
