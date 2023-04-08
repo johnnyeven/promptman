@@ -21,7 +21,6 @@ export interface IImageCard {
 }
 
 const ImageCard: React.FC<IImageCard> = ({ type, previewImageUrl, title, score, scoreCount, like, comment, download, width, height }) => {
-    console.log(styles);
     return <div className={styles['image-card-indicator-root']} style={{ width: width + 'px' }}>
         <Link className={styles['image-card-root']} style={{ height: height + 'px' }} href={""}>
 
