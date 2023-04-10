@@ -41,7 +41,7 @@ const ImageCard: React.FC<IImageCard> = ({ type, previewImageUrl, title, score, 
                     </div>
                     <div className={styles['image-card-descriptor-panel-info']}>
                         <div className={styles['image-card-descriptor-panel-info-score']}>
-                            <Space>
+                            <Space size="medium">
                                 <Rate readonly defaultValue={score} character={<IconStarFill style={{ fontSize: 14, marginRight: -5 }} />} />
                                 <span>{humanFormat(scoreCount, {
                                     maxDecimals: 1
