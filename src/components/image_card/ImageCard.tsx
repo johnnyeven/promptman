@@ -4,6 +4,7 @@ import Link from "next/link";
 import { randomColorRGB } from '../../lib/random'
 import Image from "next/image";
 import { Avatar, Rate, Space, Typography } from "@arco-design/web-react";
+import { IconStarFill } from '@arco-design/web-react/icon';
 import humanFormat from 'human-format';
 
 export enum CardType {
@@ -41,7 +42,7 @@ const ImageCard: React.FC<IImageCard> = ({ type, previewImageUrl, title, score, 
                     <div className={styles['image-card-descriptor-panel-info']}>
                         <div className={styles['image-card-descriptor-panel-info-score']}>
                             <Space>
-                                <Rate readonly defaultValue={score} />
+                                <Rate readonly defaultValue={score} character={<IconStarFill style={{ fontSize: 14, marginRight: -5 }} />} />
                                 <span>{humanFormat(scoreCount, {
                                     maxDecimals: 1
                                 })}</span>
