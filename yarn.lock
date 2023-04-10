@@ -5464,6 +5464,11 @@ https-proxy-agent@^5.0.1:
     agent-base "6"
     debug "4"
 
+human-format@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.npmmirror.com/human-format/-/human-format-1.1.0.tgz#ec824d3a69b9b76f4a63bdee2ef3a5cb9e6715f1"
+  integrity sha512-JziwtFgWPm2bhC/DNYDUOE7qQRgkpkWuUAGMCm3bWVOYX2m/MaMiRMwI4XLxZxvsz1Et/6tyvt6x0nHi2D/BOw==
+
 human-signals@^2.1.0:
   version "2.1.0"
   resolved "https://registry.npmmirror.com/human-signals/-/human-signals-2.1.0.tgz#dc91fcba42e4d06e4abaed33b3e7a3c02f514ea0"
