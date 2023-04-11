@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import styles from './ImageCard.module.css';
 import Link from "next/link";
 import { randomColorRGB } from '../../lib/random'
 import Image from "next/image";
-import { Avatar, Rate, Space, Typography } from "@arco-design/web-react";
-import { IconStarFill } from '@arco-design/web-react/icon';
+import { Avatar, Rate, Space } from "@arco-design/web-react";
+import { IconStarFill, IconHeart, IconDownload, IconMessage } from '@arco-design/web-react/icon';
 import humanFormat from 'human-format';
 
 export enum CardType {
@@ -47,6 +47,32 @@ const ImageCard: React.FC<IImageCard> = ({ type, previewImageUrl, title, score, 
                                     maxDecimals: 1
                                 })}</span>
                             </Space>
+                        </div>
+                        <div className={styles['image-card-descriptor-panel-info-action']}>
+                            <div className={styles['image-card-descriptor-tag']}>
+                                <span className={styles['image-card-descriptor-tag-icon']}><IconHeart /></span>
+                                <span className={styles['image-card-descriptor-tag-text']}>
+                                    {humanFormat(like, {
+                                        maxDecimals: 1
+                                    })}
+                                </span>
+                            </div>
+                            <div className={styles['image-card-descriptor-tag']}>
+                                <span className={styles['image-card-descriptor-tag-icon']}><IconMessage /></span>
+                                <span className={styles['image-card-descriptor-tag-text']}>
+                                    {humanFormat(comment, {
+                                        maxDecimals: 1
+                                    })}
+                                </span>
+                            </div>
+                            <div className={styles['image-card-descriptor-tag']}>
+                                <span className={styles['image-card-descriptor-tag-icon']}><IconDownload /></span>
+                                <span className={styles['image-card-descriptor-tag-text']}>
+                                    {humanFormat(download, {
+                                        maxDecimals: 1
+                                    })}
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>

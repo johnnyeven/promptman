@@ -1,5 +1,9 @@
 .image-card-indicator-root {
-    
+    margin-top: 0;
+}
+
+.image-card-indicator-root:not(:first-child) {
+    margin-top: 20px;
 }
 
 .image-card-root {
@@ -57,7 +61,7 @@
     user-select: none;
     text-decoration: none;
     border: 0;
-    background-color: rgb(50, 50, 50);
+    background-color: rgb(50, 50, 50)!important;
     padding: 0;
     opacity: 0.8;
     box-shadow: rgba(0, 0, 0, 0.5) 0px 1px 3px, rgba(0, 0, 0, 0.5) 0px 8px 15px -5px;
@@ -170,4 +174,54 @@
     background: rgba(212, 212, 212, 0.2);
     color: white;
     user-select: none;
+}
+
+.image-card-descriptor-panel-info-action {
+    box-sizing: border-box;
+    display: flex;
+    flex-flow: row wrap;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: start;
+    justify-content: flex-start;
+    gap: 4px;
+    margin-left: auto;
+    margin-top: 8px
+}
+
+.image-card-descriptor-panel-info-action > .image-card-descriptor-tag {
+    -webkit-tap-highlight-color: transparent;
+    font-size: 11px;
+    height: 20px;
+    line-height: 18px;
+    text-decoration: none;
+    padding: 0px 5px 0px 3px;
+    box-sizing: border-box;
+    display: inline-flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    width: auto;
+    text-transform: uppercase;
+    border-radius: 4px;
+    font-weight: 700;
+    letter-spacing: 0.25px;
+    cursor: inherit;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    border: 1px solid transparent;
+    background: rgba(212, 212, 212, 0.2);
+    color: white;
+}
+
+.image-card-descriptor-panel-info-action > .image-card-descriptor-tag .image-card-descriptor-tag-icon {
+    margin-right: calc(5px);
+    line-height: 1;
+}
+
+.image-card-descriptor-panel-info-action > .image-card-descriptor-tag .image-card-descriptor-tag-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
