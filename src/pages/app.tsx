@@ -4,6 +4,7 @@ import { Button, Grid, Image, Input, Radio, Typography } from "@arco-design/web-
 import Link from "next/link";
 import { useState } from "react";
 import { isArray } from "util";
+import config from "@/lib/config"
 
 const { Row, Col } = Grid;
 
@@ -11,16 +12,31 @@ const App: NextPageWithLayout = () => {
     const [isWorking, setIsWorking] = useState(false);
     const [isResult, setIsResult] = useState(false);
     const [prompt, setPrompt] = useState('');
+    const [model, setModel] = useState('openjourney');
     const [imageEncoded, setImageEncoded] = useState('');
 
     const handleClick = () => {
         getPredictResult();
     }
+    const getApi = (modelName: string) => {
+        let api = '';
+        config.models.forEach((m) => {
+            if (m.name === modelName) {
+                api = m.api;
+            }
+        });
+        return api;
+    }
     const getPredictResult = async () => {
         console.log(prompt);
         setIsWorking(true);
         setIsResult(false);
-        const res = await fetch('https://johnnyeven-prompthero-openjourney.hf.space/run/predict', {
+        let api = getApi(model);
+        if (api === '') {
+            setIsWorking(false);
+            return;
+        }
+        const res = await fetch(api, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -59,7 +75,7 @@ const App: NextPageWithLayout = () => {
             </Row>
             <Row gutter={20} className="mb-12">
                 <Col span={24}>
-                    <Input className="h-10" value={prompt} onChange={(val) => { setPrompt(val) }} size="large" placeholder="Type your prompt..." allowClear showWordLimit maxLength={200} />
+                    <Input className="h-10" value={prompt} onChange={setPrompt} size="large" placeholder="Type your prompt..." allowClear showWordLimit maxLength={200} />
                 </Col>
             </Row>
             <Row>
@@ -69,13 +85,12 @@ const App: NextPageWithLayout = () => {
             </Row>
             <Row gutter={20} justify="center" align="start" className="mb-12">
                 <Col span={24}>
-                    <Radio.Group type="button" name="model">
-                        <Radio value="1">Option 1</Radio>
-                        <Radio value="2">Option 2</Radio>
-                        <Radio value="3">Option 3</Radio>
-                        <Radio value="4">Option 4</Radio>
-                        <Radio value="5">Option 5</Radio>
-                        <Radio value="6">Option 6</Radio>
+                    <Radio.Group type="button" name="model" value={model} onChange={setModel}>
+                        {config.models.map((model) => {
+                            return (
+                                <Radio key={model.name} value={model.name}>{model.name}</Radio>
+                            )
+                        })}
                     </Radio.Group>
                 </Col>
             </Row>
