@@ -22,7 +22,7 @@ const App: NextPageWithLayout = () => {
             model: model
         }
         try {
-            const url = process.env.API_URL + '/api/create_task'
+            const url = '/api/create_task'
             let response = await fetch(url, {
                 method: 'POST',
                 headers: {

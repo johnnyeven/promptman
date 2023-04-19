@@ -2,9 +2,9 @@
 const express = require('express')
 const next = require('next')
 const { createProxyMiddleware } = require('http-proxy-middleware')
-const devProxy = {
+const proxy = {
     '/api': {
-        target: process.env.API_URL,
+        target: 'https://api-promptman.profzone.net',
         changeOrigin: true
     }
 }
@@ -20,9 +20,9 @@ app.prepare()
     .then(() => {
         const server = express()
 
-        if (dev && devProxy) {
-            Object.keys(devProxy).forEach(function (context) {
-                server.use(createProxyMiddleware(context, devProxy[context]))
+        if (proxy) {
+            Object.keys(proxy).forEach(function (context) {
+                server.use(createProxyMiddleware(context, proxy[context]))
             })
         }
 
