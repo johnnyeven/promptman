@@ -3,7 +3,6 @@ import PrimaryLayout from "@/components/layouts/primary/PrimaryLayout";
 import { Button, Grid, Image, Input, Radio, Typography } from "@arco-design/web-react";
 import Link from "next/link";
 import { useState } from "react";
-import { isArray } from "util";
 import config from "@/lib/config"
 
 const { Row, Col } = Grid;
@@ -15,45 +14,34 @@ const App: NextPageWithLayout = () => {
     const [model, setModel] = useState('openjourney');
     const [imageEncoded, setImageEncoded] = useState('');
 
-    const handleClick = () => {
-        getPredictResult();
-    }
-    const getApi = (modelName: string) => {
-        let api = '';
-        config.models.forEach((m) => {
-            if (m.name === modelName) {
-                api = m.api;
-            }
-        });
-        return api;
-    }
-    const getPredictResult = async () => {
-        console.log(prompt);
+    // create task
+    const createTask = async () => {
         setIsWorking(true);
-        setIsResult(false);
-        let api = getApi(model);
-        if (api === '') {
-            setIsWorking(false);
-            return;
+        let request = {
+            prompt: prompt,
+            model: model
         }
-        const res = await fetch(api, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                data: [
-                    prompt
-                ]
+        try {
+            const url = process.env.API_URL + '/api/create_task'
+            let response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(request)
             })
-        });
-        const data = await res.json();
-        if (data.data && isArray(data.data) && data.data.length > 0) {
-            console.log(data.data[0]);
-            setImageEncoded(data.data[0]);
-            setIsResult(true);
+            let data = await response.json();
+            if (data.code && data.code == 200) {
+                console.log(data)
+                window.localStorage.setItem('task_id', data.data.id);
+                let id = window.localStorage.getItem('task_id');
+                console.log(id)
+            }
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setIsWorking(false);
         }
-        setIsWorking(false);
     }
     const getGenerateResult = () => {
         if (!isWorking && isResult) {
@@ -101,7 +89,7 @@ const App: NextPageWithLayout = () => {
             </Row>
             <Row gutter={20} justify="center" align="start" className="mb-12">
                 <Col span={24}>
-                    <Button size='large' type='primary' onClick={handleClick} loading={isWorking}>Generate</Button>
+                    <Button size='large' type='primary' onClick={createTask} loading={isWorking}>Generate</Button>
                 </Col>
             </Row>
             {getGenerateResult()}

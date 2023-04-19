@@ -2,18 +2,14 @@
 const express = require('express')
 const next = require('next')
 const { createProxyMiddleware } = require('http-proxy-middleware')
-
 const devProxy = {
-    '/api/v': {
-        target: 'http://localhost:8088',
-        // pathRewrite: {
-        //     '^/api': '/'
-        // },
+    '/api': {
+        target: process.env.API_URL,
         changeOrigin: true
     }
 }
 
-const port = parseInt(process.env.PORT, 10) || 8080
+const port = parseInt(process.env.PORT, 10) || 3000
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({
     dev
@@ -29,9 +25,8 @@ app.prepare()
                 server.use(createProxyMiddleware(context, devProxy[context]))
             })
         }
-        server.all('*', (req, res) => {
-            handle(req, res)
-        })
+
+        server.all('*', (req, res) => handle(req, res))
 
         server.listen(port, err => {
             if (err) {
@@ -41,6 +36,5 @@ app.prepare()
         })
     })
     .catch(err => {
-        console.log('An error occurred, unable to start the server')
         console.log(err)
     })
