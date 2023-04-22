@@ -10,8 +10,8 @@ const nextConfig = {
     async rewrites() {
         return [
             {
-                source: '/api/:path*',
-                destination: process.env.API_URL + '/api/:path*'
+                source: '/task-scheduler/:path*',
+                destination: process.env.API_URL + '/task-scheduler/:path*'
             }
         ]
     }

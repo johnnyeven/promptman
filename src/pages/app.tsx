@@ -22,7 +22,7 @@ const App: NextPageWithLayout = () => {
             model: model
         }
         try {
-            const url = '/api/create_task'
+            const url = '/task-scheduler/v0/tasks'
             let response = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -76,7 +76,7 @@ const App: NextPageWithLayout = () => {
                     <Radio.Group type="button" name="model" value={model} onChange={setModel}>
                         {config.models.map((model) => {
                             return (
-                                <Radio key={model.name} value={model.name}>{model.name}</Radio>
+                                <Radio key={model.name} value={model.name}>{model.desc}</Radio>
                             )
                         })}
                     </Radio.Group>
