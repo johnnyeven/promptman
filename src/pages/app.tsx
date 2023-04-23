@@ -30,9 +30,9 @@ const App: NextPageWithLayout = () => {
                 },
                 body: JSON.stringify(request)
             })
-            if (response.status == 200) {
+            console.log(response)
+            if (response.status == 200 || response.status == 201) {
                 let data = await response.json();
-                console.log(data)
                 window.localStorage.setItem('task_id', data.task_id);
                 let id = window.localStorage.getItem('task_id');
                 console.log(id)
