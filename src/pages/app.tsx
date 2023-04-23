@@ -97,7 +97,7 @@ const App: NextPageWithLayout = () => {
             <>
                 {
                     taskContainer.map((row: any, index: number) => (
-                        <Row gutter={20} justify="center" align="start" className="mb-12" key={index}>
+                        <Row gutter={20} justify="start" align="start" className="mb-12" key={index}>
                             {
                                 row.map((task: any) => (
                                     <Col span={8} key={task.id}>
