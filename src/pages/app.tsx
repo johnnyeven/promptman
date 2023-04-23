@@ -2,20 +2,64 @@ import { NextPageWithLayout } from "./page";
 import PrimaryLayout from "@/components/layouts/primary/PrimaryLayout";
 import { Button, Grid, Image, Input, Radio, Typography } from "@arco-design/web-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import config from "@/lib/config"
+import axios from "axios";
 
 const { Row, Col } = Grid;
 
 const App: NextPageWithLayout = () => {
-    const [isWorking, setIsWorking] = useState(false);
+    const isMounted = useRef(true)
+    const [isWorking, setIsWorking] = useState(true);
     const [isResult, setIsResult] = useState(false);
     const [prompt, setPrompt] = useState('');
     const [model, setModel] = useState('openjourney');
-    const [imageEncoded, setImageEncoded] = useState('');
+    const [tasksId, setTasksId] = useState<number[]>([]);
+    const [tasks, setTasks] = useState<any[]>([]);
+
+    useEffect(() => {
+        // 获取历史任务
+        let storageTasks = JSON.parse(window.localStorage.getItem('tasks_id') || '[]');
+        let tasksId: number[] = []
+        storageTasks.forEach((task_id: any) => {
+            tasksId.push(task_id)
+        })
+        setTasksId(tasksId as never);
+        return () => {
+            isMounted.current = false
+        }
+    }, [])
+
+    // batch get tasks
+    useEffect(() => {
+        if (tasksId.length == 0) return
+        const fetch = async () => {
+            const url = '/task-scheduler/v0/tasks'
+            let response = await axios.get(url, {
+                params: {
+                    'tasks_id': tasksId.join('|')
+                }
+            })
+            if (response.status == 200) {
+                return response.data
+            }
+        }
+        fetch()
+            .catch((error) => {
+                console.log(error)
+            })
+            .then((data) => {
+                if (isMounted.current) {
+                    setTasks([...tasks, ...data.data])
+                    setIsResult(true);
+                    setIsWorking(false);
+                }
+            })
+    }, [tasksId])
 
     // create task
-    const createTask = async () => {
+    const createTask = useCallback(async () => {
+        if (isWorking) return
         setIsWorking(true);
         let request = {
             prompt: prompt,
@@ -30,29 +74,42 @@ const App: NextPageWithLayout = () => {
                 },
                 body: JSON.stringify(request)
             })
-            console.log(response)
             if (response.status == 200 || response.status == 201) {
                 let data = await response.json();
-                window.localStorage.setItem('task_id', data.task_id);
-                let id = window.localStorage.getItem('task_id');
-                console.log(id)
+                let tasks = JSON.parse(window.localStorage.getItem('tasks_id') || '[]');
+                tasks.push(data.task_id);
+                window.localStorage.setItem('tasks_id', JSON.stringify(tasks));
             }
         } catch (error) {
             console.log(error)
         } finally {
             setIsWorking(false);
         }
-    }
+    }, [isWorking])
+
     const getGenerateResult = () => {
-        if (!isWorking && isResult) {
-            return (
-                <Row gutter={20} justify="center" align="start" className="mb-12">
-                    <Col span={8}>
-                        <Image src={imageEncoded} width="100%" />
-                    </Col>
-                </Row>
-            )
+        let taskContainer = [];
+        for (let i = 0; i < tasks.length; i += 3) {
+            taskContainer.push(tasks.slice(i, i + 3));
         }
+
+        return (
+            <>
+                {
+                    taskContainer.map((row: any, index: number) => (
+                        <Row gutter={20} justify="center" align="start" className="mb-12" key={index}>
+                            {
+                                row.map((task: any) => (
+                                    <Col span={8} key={task.id}>
+                                        <Image src={task.image1} width="100%" style={{ background: "#FFFFFF" }} />
+                                    </Col>
+                                ))
+                            }
+                        </Row>
+                    ))
+                }
+            </>
+        )
     }
     return (
         <div className="w-3/5">

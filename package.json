@@ -4,7 +4,7 @@
     "private": true,
     "scripts": {
         "dev": "cross-env NODE_OPTIONS='--inspect' next dev",
-        "dev-server": "node server.js",
+        "dev-server": "yarn run dev",
         "build": "next build",
         "start": "next start",
         "lint": "next lint",
