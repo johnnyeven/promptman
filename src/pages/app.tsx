@@ -26,6 +26,12 @@ const App: NextPageWithLayout = () => {
         })
         setTasksId(tasksId as never);
         return () => {
+            setTasksId([])
+            setTasks([])
+            setIsWorking(true)
+            setIsResult(false)
+            setPrompt('')
+            setModel('openjourney')
             isMounted.current = false
         }
     }, [])
