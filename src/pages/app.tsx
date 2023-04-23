@@ -11,7 +11,6 @@ const { Row, Col } = Grid;
 const App: NextPageWithLayout = () => {
     const isMounted = useRef(true)
     const [isWorking, setIsWorking] = useState(true);
-    const [isResult, setIsResult] = useState(false);
     const [prompt, setPrompt] = useState('');
     const [model, setModel] = useState('openjourney');
     const [tasksId, setTasksId] = useState<number[]>([]);
@@ -29,7 +28,6 @@ const App: NextPageWithLayout = () => {
             setTasksId([])
             setTasks([])
             setIsWorking(true)
-            setIsResult(false)
             setPrompt('')
             setModel('openjourney')
             isMounted.current = false
@@ -57,7 +55,6 @@ const App: NextPageWithLayout = () => {
             .then((data) => {
                 if (isMounted.current) {
                     setTasks([...tasks, ...data.data])
-                    setIsResult(true);
                     setIsWorking(false);
                 }
             })
