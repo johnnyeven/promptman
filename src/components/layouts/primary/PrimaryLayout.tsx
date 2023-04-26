@@ -4,7 +4,7 @@ import { Layout } from '@arco-design/web-react';
 import NavMenu from '../../../components/nav_menu';
 
 import styles from './PrimaryLayout.module.css';
-// import "@arco-design/web-react/dist/css/arco.css";
+import "@arco-design/web-react/dist/css/arco.css";
 
 const Header = Layout.Header;
 const Content = Layout.Content;

@@ -56,6 +56,7 @@ const App: NextPageWithLayout = () => {
                 console.log(error)
             })
             .then((data) => {
+                console.log(data)
                 if (isMounted.current) {
                     setTasks([...tasks, ...data.data])
                     setIsWorking(false);
