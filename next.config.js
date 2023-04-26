@@ -7,14 +7,14 @@ const nextConfig = {
     env: {
         API_URL: process.env.API_URL,
     },
-    // async rewrites() {
-    //     return [
-    //         {
-    //             source: '/task-scheduler/:path*',
-    //             destination: process.env.API_URL + '/task-scheduler/:path*'
-    //         }
-    //     ]
-    // }
+    async rewrites() {
+        return [
+            {
+                source: '/task-scheduler/:path*',
+                destination: process.env.API_URL + '/task-scheduler/:path*'
+            }
+        ]
+    }
 }
 
 module.exports = nextConfig
