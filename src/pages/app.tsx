@@ -43,6 +43,7 @@ const App: NextPageWithLayout = () => {
                 let tasks = JSON.parse(window.localStorage.getItem('tasks_id') || '[]');
                 tasks.push(data.task_id);
                 window.localStorage.setItem('tasks_id', JSON.stringify(tasks));
+                setTasksId(tasks);
             }
         } catch (error) {
             console.log(error)
