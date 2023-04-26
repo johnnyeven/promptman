@@ -4,7 +4,6 @@ import { Button, Grid, Image, Input, Radio, Typography } from "@arco-design/web-
 import Link from "next/link";
 import { useState, useCallback, useRef, useEffect } from "react";
 import config from "@/lib/config"
-import axios from "axios";
 
 const { Row, Col } = Grid;
 
@@ -33,22 +32,13 @@ const App: NextPageWithLayout = () => {
 
             if (response.status == 200 || response.status == 201) {
                 let data = await response.json()
-                return data
-            } else {
-                throw new Error('fetch tasks error')
-            }
-        }
-        getTasksRequest()
-            .catch((error) => {
-                console.log(error)
-            })
-            .then((data) => {
-                console.log(data)
                 if (isMounted.current) {
                     setTasks([...tasks, ...data.data])
                     setIsWorking(false);
                 }
-            })
+            }
+        }
+        getTasksRequest()
         return () => {
             setTasks([])
             setIsWorking(true)
