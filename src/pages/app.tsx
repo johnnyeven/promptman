@@ -9,7 +9,7 @@ const { Row, Col } = Grid;
 
 const App: NextPageWithLayout = () => {
     const isMounted = useRef(true)
-    const [isWorking, setIsWorking] = useState(true);
+    const [isWorking, setIsWorking] = useState(false);
     const [prompt, setPrompt] = useState('');
     const [model, setModel] = useState('openjourney');
     const [tasks, setTasks] = useState<any[]>([]);
