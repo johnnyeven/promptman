@@ -40,6 +40,7 @@ const App: NextPageWithLayout = () => {
         console.log('tasksId changed')
         if (tasksId.length == 0) return
         const fetch = async () => {
+            console.log('fetch')
             const url = '/task-scheduler/v0/tasks'
             let response = await axios.get(url, {
                 params: {
