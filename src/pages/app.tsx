@@ -24,19 +24,21 @@ const App: NextPageWithLayout = () => {
             tasksId.push(task_id)
         })
         if (tasksId.length == 0) return
-        const fetch = async () => {
+        const getTasksRequest = async () => {
             console.log('fetch')
-            const url = '/task-scheduler/v0/tasks'
-            let response = await axios.get(url, {
-                params: {
-                    'tasks_id': tasksId.join('|')
-                }
+            const url = '/task-scheduler/v0/tasks?tasks_id=' + tasksId.join('|')
+            let response = await fetch(url, {
+                method: 'GET',
             })
-            if (response.status == 200) {
-                return response.data
+
+            if (response.status == 200 || response.status == 201) {
+                let data = await response.json()
+                return data
+            } else {
+                throw new Error('fetch tasks error')
             }
         }
-        fetch()
+        getTasksRequest()
             .catch((error) => {
                 console.log(error)
             })
