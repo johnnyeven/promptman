@@ -3,7 +3,6 @@ import PrimaryLayout from "@/components/layouts/primary/PrimaryLayout";
 import { Button, Grid, Image, Input, Radio, Typography } from "@arco-design/web-react";
 import Link from "next/link";
 import { useState, useCallback, useRef, useEffect } from "react";
-import { useRouter } from "next/router";
 import config from "@/lib/config"
 import axios from "axios";
 
@@ -18,6 +17,7 @@ const App: NextPageWithLayout = () => {
     const [tasks, setTasks] = useState<any[]>([]);
 
     useEffect(() => {
+        console.log('app mounted')
         // 获取历史任务
         let storageTasks = JSON.parse(window.localStorage.getItem('tasks_id') || '[]');
         let tasksId: number[] = []
@@ -37,6 +37,7 @@ const App: NextPageWithLayout = () => {
 
     // batch get tasks
     useEffect(() => {
+        console.log('tasksId changed')
         if (tasksId.length == 0) return
         const fetch = async () => {
             const url = '/task-scheduler/v0/tasks'
