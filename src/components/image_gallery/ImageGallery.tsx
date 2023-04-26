@@ -7,7 +7,6 @@ export interface IImageGallery {
 }
 
 const ImageGallery: React.FC<IImageGallery> = ({ tasksId }) => {
-    const isMounted = useRef(true)
     const [taskContainer, setTaskContainer] = useState<any[][]>([]);
 
     useEffect(() => {
@@ -19,17 +18,16 @@ const ImageGallery: React.FC<IImageGallery> = ({ tasksId }) => {
         fetch(url, { method: 'GET' })
             .then(response => response.json())
             .then(data => {
-                if (isMounted.current) {
-                    let mapper = [];
-                    for (let i = 0; i < data.data.length; i += 3) {
-                        mapper.push(data.data.slice(i, i + 3));
-                    }
-                    setTaskContainer(mapper);
+                console.log('isMounted.current: ' + data.data)
+                let mapper = [];
+                for (let i = 0; i < data.data.length; i += 3) {
+                    mapper.push(data.data.slice(i, i + 3));
                 }
+                setTaskContainer(mapper);
             })
+            .catch(error => console.log(error))
         return () => {
             setTaskContainer([])
-            isMounted.current = false
         }
     }, [tasksId])
 

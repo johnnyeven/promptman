@@ -50,7 +50,7 @@ const App: NextPageWithLayout = () => {
         } finally {
             setIsWorking(false);
         }
-    }, [isWorking])
+    }, [isWorking, prompt, model])
 
     return (
         <div className="w-3/5">
