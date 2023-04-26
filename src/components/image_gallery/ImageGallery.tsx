@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Grid, Image, Skeleton } from "@arco-design/web-react";
+import React, { useEffect, useState } from "react";
+import { Grid, Image } from "@arco-design/web-react";
 import style from './ImageGallery.module.css';
 const { Row, Col } = Grid;
 
