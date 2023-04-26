@@ -1,3 +1,26 @@
-.image-card-indicator-root {
-    margin-top: 0;
+@keyframes skeleton-circle {
+    0% {
+        background-position: 100% 0
+    }
+    100% {
+        background-position: 0 0
+    }
+}
+    
+.image-gallery-skeleton {
+    width: 100%;
+    border-radius: 8px;
+    background: linear-gradient(90deg, var(--color-fill-2) 25%, var(--color-fill-3) 37%, var(--color-fill-2) 63%);
+    background-size: 400% 100%;
+    animation: skeleton-circle 1.5s cubic-bezier(0, 0, 1, 1) infinite
+}
+.image-gallery-skeleton::before {
+    content: '';
+    padding-top: 100%;
+    float: left;
+}
+.image-gallery-skeleton::after {
+    content: '';
+    display: block;
+    clear: both;
 }

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Grid, Image } from "@arco-design/web-react";
+import { Grid, Image, Skeleton } from "@arco-design/web-react";
+import style from './ImageGallery.module.css';
 const { Row, Col } = Grid;
 
 export interface IImageGallery {
@@ -36,11 +37,24 @@ const ImageGallery: React.FC<IImageGallery> = ({ tasksId }) => {
             taskContainer.map((row: any, index: number) => (
                 <Row gutter={20} justify="start" align="start" className="mb-12" key={index}>
                     {
-                        row.map((task: any) => (
-                            <Col span={8} key={task.id}>
-                                <Image src={task.image1} width="100%" style={{ background: "#FFFFFF" }} />
-                            </Col>
-                        ))
+                        row.map((task: any) => {
+                            let parameter = JSON.parse(task.parameter)
+                            if (task.status != 'FINISHED') {
+                                return <Col span={8} key={task.id}>
+                                    <div className={style['image-gallery-skeleton']}></div>
+                                </Col>
+                            } else {
+                                return <Col span={8} key={task.id}>
+                                    <Image
+                                        src={task.image1}
+                                        width="100%"
+                                        loader={true}
+                                        style={{ borderRadius: '8px' }}
+                                        title={parameter.prompt}
+                                    />
+                                </Col>
+                            }
+                        })
                     }
                 </Row>
             ))
