@@ -23,7 +23,7 @@ const App: NextPageWithLayout = () => {
             tasksId.push(task_id)
         })
         if (tasksId.length == 0) return
-        const url = '/task-scheduler/v0/tasks?tasks_id=' + tasksId.join('|')
+        const url = process.env.API_URL + '/task-scheduler/v0/tasks?tasks_id=' + tasksId.join('|')
         fetch(url, { method: 'GET' })
             .then(response => response.json())
             .then(data => {
@@ -50,7 +50,7 @@ const App: NextPageWithLayout = () => {
             model: model
         }
         try {
-            const url = '/task-scheduler/v0/tasks'
+            const url = process.env.API_URL + '/task-scheduler/v0/tasks'
             let response = await fetch(url, {
                 method: 'POST',
                 headers: {
