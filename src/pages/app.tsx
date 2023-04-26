@@ -1,44 +1,24 @@
 import { NextPageWithLayout } from "./page";
 import PrimaryLayout from "@/components/layouts/primary/PrimaryLayout";
-import { Button, Grid, Image, Input, Radio, Typography } from "@arco-design/web-react";
+import { Button, Grid, Input, Radio, Typography } from "@arco-design/web-react";
 import Link from "next/link";
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback, useEffect, createContext } from "react";
 import config from "@/lib/config"
+import ImageGallery from "@/components/image_gallery/ImageGallery";
 
 const { Row, Col } = Grid;
 
 const App: NextPageWithLayout = () => {
-    const isMounted = useRef(true)
     const [isWorking, setIsWorking] = useState(false);
     const [prompt, setPrompt] = useState('');
     const [model, setModel] = useState('openjourney');
-    const [tasks, setTasks] = useState<any[]>([]);
+    const [tasksId, setTasksId] = useState<any[]>([]);
 
     useEffect(() => {
         console.log('app mounted')
-        // 获取历史任务
-        let storageTasks = JSON.parse(window.localStorage.getItem('tasks_id') || '[]');
-        let tasksId: number[] = []
-        storageTasks.forEach((task_id: any) => {
-            tasksId.push(task_id)
-        })
-        if (tasksId.length == 0) return
-        const url = '/task-scheduler/v0/tasks?tasks_id=' + tasksId.join('|')
-        fetch(url, { method: 'GET' })
-            .then(response => response.json())
-            .then(data => {
-                if (isMounted.current) {
-                    setTasks(data.data)
-                    setIsWorking(false);
-                }
-            })
-        return () => {
-            setTasks([])
-            setIsWorking(true)
-            setPrompt('')
-            setModel('openjourney')
-            isMounted.current = false
-        }
+        let id = JSON.parse(window.localStorage.getItem('tasks_id') || '[]')
+        console.log(id)
+        setTasksId(id)
     }, [])
 
     // create task
@@ -71,30 +51,6 @@ const App: NextPageWithLayout = () => {
         }
     }, [isWorking])
 
-    const getGenerateResult = () => {
-        let taskContainer = [];
-        for (let i = 0; i < tasks.length; i += 3) {
-            taskContainer.push(tasks.slice(i, i + 3));
-        }
-
-        return (
-            <>
-                {
-                    taskContainer.map((row: any, index: number) => (
-                        <Row gutter={20} justify="start" align="start" className="mb-12" key={index}>
-                            {
-                                row.map((task: any) => (
-                                    <Col span={8} key={task.id}>
-                                        <Image src={task.image1} width="100%" style={{ background: "#FFFFFF" }} />
-                                    </Col>
-                                ))
-                            }
-                        </Row>
-                    ))
-                }
-            </>
-        )
-    }
     return (
         <div className="w-3/5">
             <Row>
@@ -133,7 +89,7 @@ const App: NextPageWithLayout = () => {
                     <Button size='large' type='primary' onClick={createTask} loading={isWorking}>Generate</Button>
                 </Col>
             </Row>
-            {getGenerateResult()}
+            <ImageGallery tasksId={tasksId} />
         </div>
     )
 };
