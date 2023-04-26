@@ -23,22 +23,15 @@ const App: NextPageWithLayout = () => {
             tasksId.push(task_id)
         })
         if (tasksId.length == 0) return
-        const getTasksRequest = async () => {
-            console.log('fetch')
-            const url = '/task-scheduler/v0/tasks?tasks_id=' + tasksId.join('|')
-            let response = await fetch(url, {
-                method: 'GET',
-            })
-
-            if (response.status == 200 || response.status == 201) {
-                let data = await response.json()
+        const url = '/task-scheduler/v0/tasks?tasks_id=' + tasksId.join('|')
+        fetch(url, { method: 'GET' })
+            .then(response => response.json())
+            .then(data => {
                 if (isMounted.current) {
-                    setTasks([...tasks, ...data.data])
+                    setTasks(data.data)
                     setIsWorking(false);
                 }
-            }
-        }
-        getTasksRequest()
+            })
         return () => {
             setTasks([])
             setIsWorking(true)
