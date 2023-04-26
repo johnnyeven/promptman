@@ -13,7 +13,6 @@ const App: NextPageWithLayout = () => {
     const [isWorking, setIsWorking] = useState(true);
     const [prompt, setPrompt] = useState('');
     const [model, setModel] = useState('openjourney');
-    const [tasksId, setTasksId] = useState<number[]>([]);
     const [tasks, setTasks] = useState<any[]>([]);
 
     useEffect(() => {
@@ -24,20 +23,6 @@ const App: NextPageWithLayout = () => {
         storageTasks.forEach((task_id: any) => {
             tasksId.push(task_id)
         })
-        setTasksId(tasksId as never);
-        return () => {
-            setTasksId([])
-            setTasks([])
-            setIsWorking(true)
-            setPrompt('')
-            setModel('openjourney')
-            isMounted.current = false
-        }
-    }, [])
-
-    // batch get tasks
-    useEffect(() => {
-        console.log('tasksId changed')
         if (tasksId.length == 0) return
         const fetch = async () => {
             console.log('fetch')
@@ -62,7 +47,14 @@ const App: NextPageWithLayout = () => {
                     setIsWorking(false);
                 }
             })
-    }, [tasksId])
+        return () => {
+            setTasks([])
+            setIsWorking(true)
+            setPrompt('')
+            setModel('openjourney')
+            isMounted.current = false
+        }
+    }, [])
 
     // create task
     const createTask = useCallback(async () => {
