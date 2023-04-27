@@ -13,7 +13,7 @@ const ImageGallery: React.FC<IImageGallery> = ({ tasksId }) => {
     const [taskContainer, setTaskContainer] = useState<any[][]>([]);
     const [unscheduledTasksId, setUnscheduledTasksId] = useState<number[]>([]);
 
-    const socketUrl = process.env.WS_URL || '';
+    const socketUrl = process.env.WS_PROXY_URL || ''
     const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(socketUrl, {
         onOpen: () => console.log('opened'),
         shouldReconnect: (closeEvent) => {
