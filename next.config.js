@@ -17,7 +17,7 @@ const nextConfig = {
                 destination: process.env.WS_URL
             }
         ]
-    }
+    },
 }
 
 module.exports = nextConfig

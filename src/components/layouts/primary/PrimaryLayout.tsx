@@ -25,7 +25,7 @@ const PrimaryLayout: React.FC<IPrimaryLayout> = ({ children }) => {
                 <meta property="og:url" content="https://www.prompaint.com/" />
                 <meta property="og:site_name" content="Prompaint" />
                 <meta property="og:type" content="website" />
-                <title>{'Prompaint'}</title>
+                <title>{'胖胖提示词大师'}</title>
             </Head>
             <Layout className={[styles.layout, "font-mono"]}>
                 <Header className="flex flex-col top-0 left-0 fixed w-full z-50">
