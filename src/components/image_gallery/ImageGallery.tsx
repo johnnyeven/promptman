@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
+import useWebSocket from 'react-use-websocket';
 import { Grid, Image } from "@arco-design/web-react";
 import style from './ImageGallery.module.css';
 const { Row, Col } = Grid;
@@ -8,9 +9,22 @@ export interface IImageGallery {
 }
 
 const ImageGallery: React.FC<IImageGallery> = ({ tasksId }) => {
+    const didMount = useRef(false);
     const [taskContainer, setTaskContainer] = useState<any[][]>([]);
+    const [unscheduledTasksId, setUnscheduledTasksId] = useState<number[]>([]);
+
+    const socketUrl = process.env.WS_URL || '';
+    const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(socketUrl, {
+        onOpen: () => console.log('opened'),
+        shouldReconnect: (closeEvent) => {
+            return didMount.current === true
+        },
+        reconnectInterval: 5000,
+        reconnectAttempts: 5,
+    });
 
     useEffect(() => {
+        didMount.current = true
         console.log('image gallery mounted' + tasksId)
         // 获取历史任务
         if (tasksId.length == 0) return
@@ -19,18 +33,67 @@ const ImageGallery: React.FC<IImageGallery> = ({ tasksId }) => {
         fetch(url, { method: 'GET' })
             .then(response => response.json())
             .then(data => {
-                console.log('isMounted.current: ' + data.data)
                 let mapper = [];
+                let unscheduledTasksId: number[] = [];
+                console.log(data)
+                for (let i = 0; i < data.data.length; i++) {
+                    if (data.data[i].status != 'FINISHED') {
+                        console.log(data.data[i].id + ' ' + data.data[i].status)
+                        unscheduledTasksId.push(data.data[i].id)
+                    }
+                }
+                if (unscheduledTasksId.length > 0) setUnscheduledTasksId(unscheduledTasksId);
+
                 for (let i = 0; i < data.data.length; i += 3) {
                     mapper.push(data.data.slice(i, i + 3));
                 }
-                setTaskContainer(mapper);
+                if (mapper.length > 0) setTaskContainer(mapper);
             })
             .catch(error => console.log(error))
         return () => {
+            didMount.current = false
             setTaskContainer([])
         }
     }, [tasksId])
+
+    useEffect(() => {
+        console.log('unscheduledTasksId: ' + unscheduledTasksId)
+        for (let i = 0; i < unscheduledTasksId.length; i++) {
+            sendJsonMessage({ task_id: unscheduledTasksId[i] });
+        }
+    }, [unscheduledTasksId])
+
+    useEffect(() => {
+        if (lastJsonMessage == null) return
+        let task = lastJsonMessage as any
+        console.log(task)
+        let tasks = [...taskContainer]
+        console.log(tasks)
+        for (let i = 0; i < tasks.length; i++) {
+            for (let j = 0; j < tasks[i].length; j++) {
+                if (tasks[i][j].id == task.task_id) {
+                    if (task.status == 'FINISHED') {
+                        tasks[i][j].status = task.status
+                        tasks[i][j].image1 = task.result
+                        tasks[i][j].current_step = task.step
+                        tasks[i][j].max_steps = task.max_steps
+                    } else if (task.status == 'PROCESSING') {
+                        tasks[i][j].status = task.status
+                        tasks[i][j].current_step = task.step
+                        tasks[i][j].max_steps = task.max_steps
+                    } else if (task.status == 'INIT') {
+                        tasks[i][j].status = task.status
+                        tasks[i][j].queue = task.queue
+                    }
+                }
+            }
+        }
+        setTaskContainer(tasks)
+    }, [lastJsonMessage])
+
+    useEffect(() => {
+        console.log('readyState: ' + readyState)
+    }, [readyState])
 
     return <>
         {
@@ -39,11 +102,17 @@ const ImageGallery: React.FC<IImageGallery> = ({ tasksId }) => {
                     {
                         row.map((task: any) => {
                             let parameter = JSON.parse(task.parameter)
-                            if (task.status != 'FINISHED') {
+                            if (task.status == 'INIT') {
                                 return <Col span={8} key={task.id}>
                                     <div className={style['image-gallery-skeleton']}></div>
                                 </Col>
-                            } else {
+                            } else if (task.status == 'PROCESSING') {
+                                return <Col span={8} key={task.id}>
+                                    <div className={style['image-gallery-skeleton']}>
+                                        <p>{task.current_step} / {task.max_steps}</p>
+                                    </div>
+                                </Col>
+                            } else if (task.status == 'FINISHED') {
                                 return <Col span={8} key={task.id}>
                                     <Image
                                         src={task.image1}
@@ -52,6 +121,10 @@ const ImageGallery: React.FC<IImageGallery> = ({ tasksId }) => {
                                         style={{ borderRadius: '8px' }}
                                         title={parameter.prompt}
                                     />
+                                </Col>
+                            } else {
+                                return <Col span={8} key={task.id}>
+                                    <div className={style['image-gallery-skeleton']}></div>
                                 </Col>
                             }
                         })

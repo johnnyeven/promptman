@@ -2,13 +2,14 @@ import { NextPageWithLayout } from "./page";
 import PrimaryLayout from "@/components/layouts/primary/PrimaryLayout";
 import { Button, Grid, Input, Radio, Typography } from "@arco-design/web-react";
 import Link from "next/link";
-import { useState, useCallback, useEffect, createContext } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import config from "@/lib/config"
 import ImageGallery from "@/components/image_gallery/ImageGallery";
 
 const { Row, Col } = Grid;
 
 const App: NextPageWithLayout = () => {
+    const didMount = useRef(false);
     const [isWorking, setIsWorking] = useState(false);
     const [prompt, setPrompt] = useState('');
     const [model, setModel] = useState('openjourney');
@@ -16,9 +17,18 @@ const App: NextPageWithLayout = () => {
 
     useEffect(() => {
         console.log('app mounted')
+        didMount.current = true;
         let id = JSON.parse(window.localStorage.getItem('tasks_id') || '[]')
         console.log(id)
         setTasksId(id)
+
+        return () => {
+            setTasksId([])
+            setPrompt('')
+            setModel('openjourney')
+            setIsWorking(false)
+            didMount.current = false;
+        }
     }, [])
 
     // create task
