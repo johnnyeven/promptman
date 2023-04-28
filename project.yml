@@ -7,5 +7,9 @@ program_language: nextjs
 workflow:
   extends: feature-pr
 scripts:
-  build: yarn next build
-  test: yarn next lint
+  build:
+  - yarn
+  - yarn next build
+  test:
+  - yarn
+  - yarn next lint

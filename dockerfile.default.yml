@@ -3,6 +3,6 @@ image: ${DOCKER_REGISTRY}/${PROJECT_GROUP}/${PROJECT_NAME}:${PROJECT_VERSION}
 env:
   NODE_ENV: production
 add:
-  .next/: /var/services
+  ./: /var/services
 cmd:
-  - yarn next start
+  - yarn && yarn next start
