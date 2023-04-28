@@ -1,0 +1,8 @@
+from: ${DOCKER_REGISTRY}/${RUNNER_NEXTJS}
+image: ${DOCKER_REGISTRY}/${PROJECT_GROUP}/${PROJECT_NAME}:${PROJECT_VERSION}
+env:
+  NODE_ENV: production
+add:
+  .next/: /var/services
+cmd:
+  - yarn next start

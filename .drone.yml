@@ -1,0 +1,316 @@
+kind: pipeline
+type: docker
+volumes:
+  - name: temp
+    temp: {}
+  - name: host
+    host:
+      path: /var/run/docker.sock
+  - name: config
+    host:
+      path: /data/eden/.eden.yaml
+steps:
+  - name: main_test
+    image: registry.cn-hangzhou.aliyuncs.com/eden-framework/next-onbuild:1.0
+    pull: always
+    commands:
+      - eden ci run test
+    environment:
+      GOENV: PROD
+    when:
+      branch:
+        include:
+          - main
+        exclude: []
+    volumes:
+      - name: temp
+        path: /go
+      - name: host
+        path: /var/run/docker.sock
+      - name: config
+        path: /root/.eden.yaml
+  - name: main_build
+    image: registry.cn-hangzhou.aliyuncs.com/eden-framework/next-onbuild:1.0
+    pull: always
+    commands:
+      - eden ci run build
+    environment:
+      GOENV: PROD
+    when:
+      branch:
+        include:
+          - main
+        exclude: []
+    volumes:
+      - name: temp
+        path: /go
+      - name: host
+        path: /var/run/docker.sock
+      - name: config
+        path: /root/.eden.yaml
+  - name: main_ship
+    image: registry.cn-hangzhou.aliyuncs.com/eden-framework/golang-onship:1.19
+    pull: always
+    commands:
+      - eden ci ship --push
+    environment:
+      GOENV: PROD
+    when:
+      branch:
+        include:
+          - main
+        exclude: []
+    volumes:
+      - name: temp
+        path: /go
+      - name: host
+        path: /var/run/docker.sock
+      - name: config
+        path: /root/.eden.yaml
+  - name: main_deploy
+    image: registry.cn-hangzhou.aliyuncs.com/eden-framework/golang-ondeploy:1.0
+    pull: always
+    commands:
+      - eden ci deploy --env=PROD
+    environment:
+      GOENV: PROD
+    when:
+      branch:
+        include:
+          - main
+        exclude: []
+    volumes:
+      - name: temp
+        path: /go
+      - name: host
+        path: /var/run/docker.sock
+      - name: config
+        path: /root/.eden.yaml
+  - name: feature_test
+    image: registry.cn-hangzhou.aliyuncs.com/eden-framework/next-onbuild:1.0
+    pull: always
+    commands:
+      - eden ci run test
+    environment:
+      GOENV: STAGING
+    when:
+      branch:
+        include:
+          - feature/*
+        exclude: []
+    volumes:
+      - name: temp
+        path: /go
+      - name: host
+        path: /var/run/docker.sock
+      - name: config
+        path: /root/.eden.yaml
+  - name: feature_build
+    image: registry.cn-hangzhou.aliyuncs.com/eden-framework/next-onbuild:1.0
+    pull: always
+    commands:
+      - eden ci run build
+    environment:
+      GOENV: STAGING
+    when:
+      branch:
+        include:
+          - feature/*
+        exclude: []
+    volumes:
+      - name: temp
+        path: /go
+      - name: host
+        path: /var/run/docker.sock
+      - name: config
+        path: /root/.eden.yaml
+  - name: feature_ship
+    image: registry.cn-hangzhou.aliyuncs.com/eden-framework/golang-onship:1.19
+    pull: always
+    commands:
+      - eden ci ship --push
+    environment:
+      GOENV: STAGING
+    when:
+      branch:
+        include:
+          - feature/*
+        exclude: []
+    volumes:
+      - name: temp
+        path: /go
+      - name: host
+        path: /var/run/docker.sock
+      - name: config
+        path: /root/.eden.yaml
+  - name: feature_deploy
+    image: registry.cn-hangzhou.aliyuncs.com/eden-framework/golang-ondeploy:1.0
+    pull: always
+    commands:
+      - eden ci deploy
+    environment:
+      GOENV: STAGING
+    when:
+      branch:
+        include:
+          - feature/*
+        exclude: []
+    volumes:
+      - name: temp
+        path: /go
+      - name: host
+        path: /var/run/docker.sock
+      - name: config
+        path: /root/.eden.yaml
+  - name: testFeature_test
+    image: registry.cn-hangzhou.aliyuncs.com/eden-framework/next-onbuild:1.0
+    pull: always
+    commands:
+      - eden ci run test
+    environment:
+      GOENV: TEST
+    when:
+      branch:
+        include:
+          - test/feature/*
+        exclude: []
+    volumes:
+      - name: temp
+        path: /go
+      - name: host
+        path: /var/run/docker.sock
+      - name: config
+        path: /root/.eden.yaml
+  - name: testFeature_build
+    image: registry.cn-hangzhou.aliyuncs.com/eden-framework/next-onbuild:1.0
+    pull: always
+    commands:
+      - eden ci run build
+    environment:
+      GOENV: TEST
+    when:
+      branch:
+        include:
+          - test/feature/*
+        exclude: []
+    volumes:
+      - name: temp
+        path: /go
+      - name: host
+        path: /var/run/docker.sock
+      - name: config
+        path: /root/.eden.yaml
+  - name: testFeature_ship
+    image: registry.cn-hangzhou.aliyuncs.com/eden-framework/golang-onship:1.19
+    pull: always
+    commands:
+      - eden ci ship --push
+    environment:
+      GOENV: TEST
+    when:
+      branch:
+        include:
+          - test/feature/*
+        exclude: []
+    volumes:
+      - name: temp
+        path: /go
+      - name: host
+        path: /var/run/docker.sock
+      - name: config
+        path: /root/.eden.yaml
+  - name: testFeature_deploy
+    image: registry.cn-hangzhou.aliyuncs.com/eden-framework/golang-ondeploy:1.0
+    pull: always
+    commands:
+      - eden ci deploy
+    environment:
+      GOENV: TEST
+    when:
+      branch:
+        include:
+          - test/feature/*
+        exclude: []
+    volumes:
+      - name: temp
+        path: /go
+      - name: host
+        path: /var/run/docker.sock
+      - name: config
+        path: /root/.eden.yaml
+  - name: demoFeature_test
+    image: registry.cn-hangzhou.aliyuncs.com/eden-framework/next-onbuild:1.0
+    pull: always
+    commands:
+      - eden ci run test
+    environment:
+      GOENV: DEMO
+    when:
+      branch:
+        include:
+          - demo/feature/*
+        exclude: []
+    volumes:
+      - name: temp
+        path: /go
+      - name: host
+        path: /var/run/docker.sock
+      - name: config
+        path: /root/.eden.yaml
+  - name: demoFeature_build
+    image: registry.cn-hangzhou.aliyuncs.com/eden-framework/next-onbuild:1.0
+    pull: always
+    commands:
+      - eden ci run build
+    environment:
+      GOENV: DEMO
+    when:
+      branch:
+        include:
+          - demo/feature/*
+        exclude: []
+    volumes:
+      - name: temp
+        path: /go
+      - name: host
+        path: /var/run/docker.sock
+      - name: config
+        path: /root/.eden.yaml
+  - name: demoFeature_ship
+    image: registry.cn-hangzhou.aliyuncs.com/eden-framework/golang-onship:1.19
+    pull: always
+    commands:
+      - eden ci ship --push
+    environment:
+      GOENV: DEMO
+    when:
+      branch:
+        include:
+          - demo/feature/*
+        exclude: []
+    volumes:
+      - name: temp
+        path: /go
+      - name: host
+        path: /var/run/docker.sock
+      - name: config
+        path: /root/.eden.yaml
+  - name: demoFeature_deploy
+    image: registry.cn-hangzhou.aliyuncs.com/eden-framework/golang-ondeploy:1.0
+    pull: always
+    commands:
+      - eden ci deploy
+    environment:
+      GOENV: DEMO
+    when:
+      branch:
+        include:
+          - demo/feature/*
+        exclude: []
+    volumes:
+      - name: temp
+        path: /go
+      - name: host
+        path: /var/run/docker.sock
+      - name: config
+        path: /root/.eden.yaml

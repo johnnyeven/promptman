@@ -1,0 +1,11 @@
+name: promptman
+group: eden-app
+owner: eden-profzone
+version: 0.0.0
+description: prompaint
+program_language: nextjs
+workflow:
+  extends: feature-pr
+scripts:
+  build: yarn next build
+  test: yarn next lint
