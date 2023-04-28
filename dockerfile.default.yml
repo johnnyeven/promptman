@@ -4,5 +4,7 @@ env:
   NODE_ENV: production
 add:
   ./: /var/services
+cmd:
+  - yarn next start
 entrypoint:
   - ./entrypoint.sh
