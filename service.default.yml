@@ -5,15 +5,15 @@ metadata:
   name: ${PROJECT_NAME}
   namespace: ${PROJECT_GROUP}
   ownerReferences:
-  - apiVersion: apps/v1beta2
-    kind: Deployment
-    name: ${PROJECT_NAME}
-    uid: ${DEPLOYMENT_UID}
+    - apiVersion: apps/v1beta2
+      kind: Deployment
+      name: ${PROJECT_NAME}
+      uid: ${DEPLOYMENT_UID}
 spec:
   ports:
-  - name: tcp80
-    port: 80
-    protocol: TCP
-    targetPort: 80
+    - name: tcp3000
+      port: 3000
+      protocol: TCP
+      targetPort: 3000
   selector:
     app: ${PROJECT_NAME}
