@@ -1,0 +1,8 @@
+{
+    "navigation": {
+        "home": "Home",
+        "app": "App",
+        "editor": "Editor",
+        "gallery": "Gallery"
+    }
+}

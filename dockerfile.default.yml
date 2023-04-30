@@ -6,5 +6,7 @@ add:
   ./: /var/services
 cmd:
   - yarn next start
+expose:
+  - 3000
 entrypoint:
   - ./entrypoint.sh

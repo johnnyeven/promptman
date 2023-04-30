@@ -1,10 +1,11 @@
 import Image from 'next/image'
-
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { NextPageWithLayout } from './page';
 import PrimaryLayout from '@/components/layouts/primary/PrimaryLayout';
-
+import { useTranslation } from 'next-i18next';
 
 const Home: NextPageWithLayout = () => {
+    const { t } = useTranslation('index');
     return (
         <>
             <div className="z-10 w-full max-w-5xl items-center justify-between text-sm lg:flex">
@@ -15,13 +16,13 @@ const Home: NextPageWithLayout = () => {
 
             <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:blur-2xl after:content-[''] before:bg-gradient-to-br before:from-transparent before:to-blue-700/10 after:from-sky-900 after:via-[#0141ff]/40 before:lg:h-[360px]">
                 <p style={{ fontSize: '5em' }}>
-                    胖胖提示词大师
+                    {t('page.title')}
                 </p>
             </div>
 
             <div>
                 <p style={{ width: '40em' }}>
-                    专为编写Midjourney或StableDiffusion等AIGC工具的提示词，通过主页的编辑器功能使用者能够快速编写提示词
+                    {t('page.description')}
                 </p>
             </div>
             <div className="mb-32 text-center lg:mb-0 items-center justify-between">
@@ -53,4 +54,12 @@ Home.getLayout = (page) => {
             {page}
         </PrimaryLayout>
     );
+}
+
+export async function getStaticProps({ locale }: any) {
+    return {
+        props: {
+            ...(await serverSideTranslations(locale, ['common', 'locale_switcher', 'index'])),
+        },
+    };
 }

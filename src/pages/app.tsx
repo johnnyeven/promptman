@@ -5,10 +5,13 @@ import Link from "next/link";
 import { useState, useCallback, useEffect, useRef } from "react";
 import config from "@/lib/config"
 import ImageGallery from "@/components/image_gallery/ImageGallery";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { useTranslation } from "next-i18next";
 
 const { Row, Col } = Grid;
 
 const App: NextPageWithLayout = () => {
+    const { t } = useTranslation('app')
     const didMount = useRef(false);
     const [isWorking, setIsWorking] = useState(false);
     const [prompt, setPrompt] = useState('');
@@ -16,7 +19,6 @@ const App: NextPageWithLayout = () => {
     const [tasksId, setTasksId] = useState<any[]>([]);
 
     useEffect(() => {
-        console.log('app mounted')
         didMount.current = true;
         let id = JSON.parse(window.localStorage.getItem('tasks_id') || '[]')
         console.log(id)
@@ -66,7 +68,7 @@ const App: NextPageWithLayout = () => {
         <div className="w-3/5">
             <Row>
                 <Col span={24}>
-                    <Typography.Title heading={3}>1. Type your prompt or <Link href="/editor" style={{ color: 'orange' }}>use editor</Link></Typography.Title>
+                    <Typography.Title heading={3}>{t('page.head.first.segment1')}<Link href="/editor" style={{ color: 'orange' }}>{t('page.head.first.segment2')}</Link></Typography.Title>
                 </Col>
             </Row>
             <Row gutter={20} className="mb-12">
@@ -76,7 +78,7 @@ const App: NextPageWithLayout = () => {
             </Row>
             <Row>
                 <Col span={24}>
-                    <Typography.Title heading={3}>2. Select a pretrained model</Typography.Title>
+                    <Typography.Title heading={3}>{t('page.head.second')}</Typography.Title>
                 </Col>
             </Row>
             <Row gutter={20} justify="center" align="start" className="mb-12">
@@ -92,12 +94,12 @@ const App: NextPageWithLayout = () => {
             </Row>
             <Row>
                 <Col span={24}>
-                    <Typography.Title heading={3}>3. Run</Typography.Title>
+                    <Typography.Title heading={3}>{t('page.head.third')}</Typography.Title>
                 </Col>
             </Row>
             <Row gutter={20} justify="center" align="start" className="mb-12">
                 <Col span={24}>
-                    <Button size='large' type='primary' onClick={createTask} loading={isWorking}>Generate</Button>
+                    <Button size='large' type='primary' onClick={createTask} loading={isWorking}>{t('page.button')}</Button>
                 </Col>
             </Row>
             <ImageGallery tasksId={tasksId} />
@@ -113,4 +115,12 @@ App.getLayout = (page) => {
             {page}
         </PrimaryLayout>
     );
+}
+
+export async function getStaticProps({ locale }: any) {
+    return {
+        props: {
+            ...(await serverSideTranslations(locale, ['common', 'locale_switcher', 'app'])),
+        },
+    };
 }

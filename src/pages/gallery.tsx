@@ -3,6 +3,7 @@ import { NextPageWithLayout } from "./page";
 import PrimaryLayout from "@/components/layouts/primary/PrimaryLayout";
 import ImageCard from "@/components/image_card/ImageCard";
 import CardFilter from "@/components/card_filter/CardFilter";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 const Row = Grid.Row;
 const Col = Grid.Col;
@@ -41,4 +42,12 @@ Gallery.getLayout = (page) => {
             {page}
         </PrimaryLayout>
     );
+}
+
+export async function getStaticProps({ locale }: any) {
+    return {
+        props: {
+            ...(await serverSideTranslations(locale, ['common', 'locale_switcher'])),
+        },
+    };
 }

@@ -1,0 +1,13 @@
+{
+    "page": {
+        "head": {
+            "first": {
+                "segment1": "1. Type your prompt or ",
+                "segment2": "use editor"
+            },
+            "second": "2. Select a pretrained model",
+            "third": "3. Run"
+        },
+        "button": "Generate"
+    }
+}
