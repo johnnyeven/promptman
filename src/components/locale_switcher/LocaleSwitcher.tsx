@@ -3,7 +3,6 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 import { IconLanguage } from '@arco-design/web-react/icon'
-import { useEffect } from 'react'
 
 const Option = Select.Option
 

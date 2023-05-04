@@ -7,25 +7,25 @@ import config from "@/lib/config"
 import ImageGallery from "@/components/image_gallery/ImageGallery";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "next-i18next";
+import { useSession } from "next-auth/react";
+import { getToken } from "next-auth/jwt";
 
 const { Row, Col } = Grid;
 
-const App: NextPageWithLayout = () => {
+const App: NextPageWithLayout = ({ token }) => {
     const { t } = useTranslation('app')
     const didMount = useRef(false);
+    const [repaintGallery, setRepaintGallery] = useState(0);
     const [isWorking, setIsWorking] = useState(false);
     const [prompt, setPrompt] = useState('');
     const [model, setModel] = useState('openjourney');
-    const [tasksId, setTasksId] = useState<any[]>([]);
+    const { data: session } = useSession({ required: true })
+    console.log(token)
 
     useEffect(() => {
         didMount.current = true;
-        let id = JSON.parse(window.localStorage.getItem('tasks_id') || '[]')
-        console.log(id)
-        setTasksId(id)
 
         return () => {
-            setTasksId([])
             setPrompt('')
             setModel('openjourney')
             setIsWorking(false)
@@ -46,16 +46,13 @@ const App: NextPageWithLayout = () => {
             let response = await fetch(url, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify(request)
             })
             if (response.status == 200 || response.status == 201) {
-                let data = await response.json();
-                let tasks = JSON.parse(window.localStorage.getItem('tasks_id') || '[]');
-                tasks.push(data.task_id);
-                window.localStorage.setItem('tasks_id', JSON.stringify(tasks));
-                setTasksId(tasks);
+                setRepaintGallery(repaintGallery + 1)
             }
         } catch (error) {
             console.log(error)
@@ -102,7 +99,7 @@ const App: NextPageWithLayout = () => {
                     <Button size='large' type='primary' onClick={createTask} loading={isWorking}>{t('page.button')}</Button>
                 </Col>
             </Row>
-            <ImageGallery tasksId={tasksId} />
+            <ImageGallery key={repaintGallery} token={token} />
         </div>
     )
 };
@@ -117,10 +114,12 @@ App.getLayout = (page) => {
     );
 }
 
-export async function getStaticProps({ locale }: any) {
+export async function getServerSideProps({ req, locale }) {
+    const token = await getToken({ req, raw: true })
     return {
         props: {
+            token,
             ...(await serverSideTranslations(locale, ['common', 'locale_switcher', 'app'])),
-        },
-    };
+        }
+    }
 }

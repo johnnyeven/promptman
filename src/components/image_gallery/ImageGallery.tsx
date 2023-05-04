@@ -1,14 +1,15 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import useWebSocket from 'react-use-websocket';
 import { Grid, Image } from "@arco-design/web-react";
 import style from './ImageGallery.module.css';
 const { Row, Col } = Grid;
 
 export interface IImageGallery {
-    tasksId: any[];
+    token: string;
 }
 
-const ImageGallery: React.FC<IImageGallery> = ({ tasksId }) => {
+const ImageGallery: React.FC<IImageGallery> = ({ token }) => {
+    console.log(token)
     const didMount = useRef(false);
     const [taskContainer, setTaskContainer] = useState<any[][]>([]);
     const [unscheduledTasksId, setUnscheduledTasksId] = useState<number[]>([]);
@@ -25,20 +26,23 @@ const ImageGallery: React.FC<IImageGallery> = ({ tasksId }) => {
 
     useEffect(() => {
         didMount.current = true
-        console.log('image gallery mounted' + tasksId)
         // 获取历史任务
-        if (tasksId.length == 0) return
+        if (!token || token == '') return
 
-        const url = '/task-scheduler/v0/tasks?tasks_id=' + tasksId.join('|')
-        fetch(url, { method: 'GET' })
+        const url = '/task-scheduler/v0/tasks'
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
             .then(response => response.json())
             .then(data => {
                 let mapper = [];
                 let unscheduledTasksId: number[] = [];
-                console.log(data)
                 for (let i = 0; i < data.data.length; i++) {
                     if (data.data[i].status != 'FINISHED') {
-                        console.log(data.data[i].id + ' ' + data.data[i].status)
                         unscheduledTasksId.push(data.data[i].id)
                     }
                 }
@@ -54,7 +58,7 @@ const ImageGallery: React.FC<IImageGallery> = ({ tasksId }) => {
             didMount.current = false
             setTaskContainer([])
         }
-    }, [tasksId])
+    }, [])
 
     useEffect(() => {
         console.log('unscheduledTasksId: ' + unscheduledTasksId)
@@ -66,9 +70,7 @@ const ImageGallery: React.FC<IImageGallery> = ({ tasksId }) => {
     useEffect(() => {
         if (lastJsonMessage == null) return
         let task = lastJsonMessage as any
-        console.log(task)
         let tasks = [...taskContainer]
-        console.log(tasks)
         for (let i = 0; i < tasks.length; i++) {
             for (let j = 0; j < tasks[i].length; j++) {
                 if (tasks[i][j].id == task.task_id) {

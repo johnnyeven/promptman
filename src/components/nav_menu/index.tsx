@@ -2,6 +2,7 @@ import { Menu } from "@arco-design/web-react";
 import Link from "next/link";
 import { useTranslation } from "next-i18next";
 import LocaleSwitcher from "../locale_switcher/LocaleSwitcher";
+import UserControl from "../user_control/UserControl";
 
 const MenuItem = Menu.Item;
 
@@ -14,6 +15,7 @@ export default function NavMenu({ activeIndex = "1" }) {
             <MenuItem key='3'><Link href={'/editor'}>{t('navigation.editor')}</Link></MenuItem>
             {/* <MenuItem key='4'><Link href={'/gallery'}>Gallery</Link></MenuItem> */}
             <LocaleSwitcher />
+            {/* <UserControl /> */}
         </Menu>
     );
 }
