@@ -12,7 +12,8 @@ import { getToken } from "next-auth/jwt";
 
 const { Row, Col } = Grid;
 
-const App: NextPageWithLayout = ({ token }) => {
+const App: NextPageWithLayout = (props: any) => {
+    const { token } = props
     const { t } = useTranslation('app')
     const didMount = useRef(false);
     const [repaintGallery, setRepaintGallery] = useState(0);
@@ -115,7 +116,8 @@ App.getLayout = (page) => {
     );
 }
 
-export async function getServerSideProps({ req, locale }) {
+export async function getServerSideProps(props: { req: any, locale: string }) {
+    const { req, locale } = props
     const token = await getToken({ req, raw: true, secret: process.env.JWT_SECRET })
     return {
         props: {

@@ -1,10 +1,13 @@
-import NextAuth from "next-auth"
+import NextAuth, { Account, Profile, User, SessionStrategy } from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import GithubProvider from "next-auth/providers/github"
+import { JWT } from "next-auth/jwt"
+
+const JWTStrategy: SessionStrategy = "jwt"
 export const authOptions = {
     secret: process.env.JWT_SECRET,
     session: {
-        strategy: 'jwt',
+        strategy: JWTStrategy,
     },
     providers: [
         GithubProvider({
@@ -23,7 +26,8 @@ export const authOptions = {
         }),
     ],
     callbacks: {
-        jwt: async ({ token, account, profile }) => {
+        jwt: async (props: { token: JWT, account: Account | null, profile?: Profile }) => {
+            const { token, account, profile } = props
             if (account?.access_token) {
                 token.at = account.access_token
             }
@@ -32,7 +36,8 @@ export const authOptions = {
             }
             return token
         },
-        session: async ({ session, token, user }) => {
+        session: async (props: { session: any, token: JWT, user: User }) => {
+            const { session, token, user } = props
             if (token?.at) {
                 session.accessToken = token.at
             }
