@@ -9,7 +9,6 @@ export interface IImageGallery {
 }
 
 const ImageGallery: React.FC<IImageGallery> = ({ token }) => {
-    console.log(token)
     const didMount = useRef(false);
     const [taskContainer, setTaskContainer] = useState<any[][]>([]);
     const [unscheduledTasksId, setUnscheduledTasksId] = useState<number[]>([]);

@@ -2,7 +2,10 @@ import NextAuth from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import GithubProvider from "next-auth/providers/github"
 export const authOptions = {
-    // Configure one or more authentication providers
+    secret: process.env.JWT_SECRET,
+    session: {
+        strategy: 'jwt',
+    },
     providers: [
         GithubProvider({
             clientId: process.env.GITHUB_AUTH_ID || '',
@@ -27,7 +30,6 @@ export const authOptions = {
             if (account?.providerAccountId) {
                 token.id = account.providerAccountId
             }
-            console.log(token)
             return token
         },
         session: async ({ session, token, user }) => {

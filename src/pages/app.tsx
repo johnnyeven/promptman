@@ -20,6 +20,7 @@ const App: NextPageWithLayout = ({ token }) => {
     const [prompt, setPrompt] = useState('');
     const [model, setModel] = useState('openjourney');
     const { data: session } = useSession({ required: true })
+
     console.log(token)
 
     useEffect(() => {
@@ -115,7 +116,7 @@ App.getLayout = (page) => {
 }
 
 export async function getServerSideProps({ req, locale }) {
-    const token = await getToken({ req, raw: true })
+    const token = await getToken({ req, raw: true, secret: process.env.JWT_SECRET })
     return {
         props: {
             token,
