@@ -59,7 +59,7 @@ Home.getLayout = (page) => {
 export async function getStaticProps({ locale }: any) {
     return {
         props: {
-            ...(await serverSideTranslations(locale, ['common', 'locale_switcher', 'index'])),
+            ...(await serverSideTranslations(locale, ['common', 'locale_switcher', 'user_control', 'index'])),
         },
     };
 }

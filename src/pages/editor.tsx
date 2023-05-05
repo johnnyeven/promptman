@@ -33,7 +33,7 @@ Editor.getLayout = (page) => {
 export async function getStaticProps({ locale }: any) {
     return {
         props: {
-            ...(await serverSideTranslations(locale, ['common', 'locale_switcher', 'editor'])),
+            ...(await serverSideTranslations(locale, ['common', 'locale_switcher', 'user_control', 'editor'])),
         },
     };
 }

@@ -125,7 +125,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return {
         props: {
             token,
-            ...(await serverSideTranslations(context.locale || '', ['common', 'locale_switcher', 'app'])),
+            ...(await serverSideTranslations(context.locale || '', ['common', 'locale_switcher', 'user_control', 'app'])),
         }
     }
 }

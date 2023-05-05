@@ -1,15 +1,32 @@
 import NextAuth, { Account, Profile, User, SessionStrategy } from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import GithubProvider from "next-auth/providers/github"
+import EmailProvider from "next-auth/providers/email"
 import { JWT } from "next-auth/jwt"
+import { PrismaAdapter } from "@next-auth/prisma-adapter"
+import { PrismaClient } from "@prisma/client"
 
+const prisma = new PrismaClient()
 const JWTStrategy: SessionStrategy = "jwt"
 export const authOptions = {
     secret: process.env.JWT_SECRET,
     session: {
         strategy: JWTStrategy,
     },
+    adapter: PrismaAdapter(prisma),
     providers: [
+        EmailProvider({
+            server: {
+                host: process.env.EMAIL_AUTH_HOST,
+                port: Number(process.env.EMAIL_AUTH_PORT),
+                secure: true,
+                auth: {
+                    user: process.env.EMAIL_AUTH_USER,
+                    pass: process.env.EMAIL_AUTH_PASSWORD,
+                },
+            },
+            from: process.env.EMAIL_AUTH_FROM,
+        }),
         GithubProvider({
             clientId: process.env.GITHUB_AUTH_ID || '',
             clientSecret: process.env.GITHUB_AUTH_SECRET || '',

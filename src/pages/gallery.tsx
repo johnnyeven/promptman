@@ -47,7 +47,7 @@ Gallery.getLayout = (page) => {
 export async function getStaticProps({ locale }: any) {
     return {
         props: {
-            ...(await serverSideTranslations(locale, ['common', 'locale_switcher'])),
+            ...(await serverSideTranslations(locale, ['common', 'locale_switcher', 'user_control'])),
         },
     };
 }

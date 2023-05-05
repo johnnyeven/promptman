@@ -1,0 +1,11 @@
+{
+    "user_control": {
+        "signout": "退出登录",
+        "email_placeholder": "请输入邮箱",
+        "email_valid_message": "请输入正确的邮箱",
+        "register": "发送邮件",
+        "or": "您还可以",
+        "signin_with_segment1": "使用 ",
+        "signin_with_segment2": " 登录"
+    }
+}

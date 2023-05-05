@@ -1,0 +1,11 @@
+{
+    "user_control": {
+        "signout": "Logout",
+        "email_placeholder": "please input your email",
+        "email_valid_message": "please input valid email",
+        "register": "Register",
+        "or": "Or",
+        "signin_with_segment1": "Sign in with ",
+        "signin_with_segment2": ""
+    }
+}
