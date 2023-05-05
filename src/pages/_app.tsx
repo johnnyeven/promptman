@@ -3,9 +3,10 @@ import type { AppProps } from 'next/app'
 import { NextPageWithLayout } from './page'
 import { appWithTranslation } from "next-i18next";
 import { SessionProvider } from "next-auth/react";
+import { ProviderDataContext } from '@/context/auth_providers_context';
 
 interface AppPropsWithLayout extends AppProps {
-    Component: NextPageWithLayout;
+    Component: NextPageWithLayout
 }
 
 function App({ Component, pageProps: { session, ...pageProps } }: AppPropsWithLayout) {
@@ -14,7 +15,9 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppPropsWithLa
         <SessionProvider session={session}>
             {
                 getLayout(
-                    <Component {...pageProps} />
+                    <ProviderDataContext>
+                        <Component {...pageProps} />
+                    </ProviderDataContext>
                 )
             }
         </SessionProvider>

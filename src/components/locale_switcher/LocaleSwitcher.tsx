@@ -19,7 +19,7 @@ export default function LocaleSwitcher() {
             onChange={(value: string) => { }}
             defaultValue={router.locale}
             addBefore={<IconLanguage />}
-            className={['absolute', 'top-3', 'right-3']}
+            className={['absolute', 'top-3', 'right-10']}
         >
             {
                 locales.map((locale) => {

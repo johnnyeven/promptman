@@ -15,7 +15,7 @@ export default function NavMenu({ activeIndex = "1" }) {
             <MenuItem key='3'><Link href={'/editor'}>{t('navigation.editor')}</Link></MenuItem>
             {/* <MenuItem key='4'><Link href={'/gallery'}>Gallery</Link></MenuItem> */}
             <LocaleSwitcher />
-            {/* <UserControl /> */}
+            <UserControl />
         </Menu>
     );
 }

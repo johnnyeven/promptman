@@ -9,20 +9,24 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "next-i18next";
 import { useSession } from "next-auth/react";
 import { getToken } from "next-auth/jwt";
+import { GetServerSidePropsContext } from "next";
+import { useProviderDataContext } from "@/context";
 
 const { Row, Col } = Grid;
 
 const App: NextPageWithLayout = (props: any) => {
-    const { token } = props
+    useSession({ required: true })
+
+    const { token, providers } = props
+    const { setProviders } = useProviderDataContext()
     const { t } = useTranslation('app')
     const didMount = useRef(false);
     const [repaintGallery, setRepaintGallery] = useState(0);
     const [isWorking, setIsWorking] = useState(false);
     const [prompt, setPrompt] = useState('');
     const [model, setModel] = useState('openjourney');
-    const { data: session } = useSession({ required: true })
 
-    console.log(token)
+    setProviders(providers)
 
     useEffect(() => {
         didMount.current = true;
@@ -116,13 +120,12 @@ App.getLayout = (page) => {
     );
 }
 
-export async function getServerSideProps(props: { req: any, locale: string }) {
-    const { req, locale } = props
-    const token = await getToken({ req, raw: true, secret: process.env.JWT_SECRET })
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+    const token = await getToken({ req: context.req, raw: true, secret: process.env.JWT_SECRET })
     return {
         props: {
             token,
-            ...(await serverSideTranslations(locale, ['common', 'locale_switcher', 'app'])),
+            ...(await serverSideTranslations(context.locale || '', ['common', 'locale_switcher', 'app'])),
         }
     }
 }
