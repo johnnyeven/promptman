@@ -7,6 +7,17 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+model t_model {
+    name               String @id @db.VarChar(255)
+    description        String @db.VarChar(255)
+    api_type           Int    @default(0)
+    api_entry          String @db.VarChar(255)
+    api_default_params Json?
+    created_at         BigInt
+    updated_at         BigInt
+    deleted_at         BigInt @default(0)
+}
+
 model t_task {
     id           BigInt  @id @default(autoincrement())
     parameter    Json

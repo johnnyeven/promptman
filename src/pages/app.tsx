@@ -3,37 +3,34 @@ import PrimaryLayout from "@/components/layouts/primary/PrimaryLayout";
 import { Button, Grid, Input, Radio, Typography } from "@arco-design/web-react";
 import Link from "next/link";
 import { useState, useCallback, useEffect, useRef } from "react";
-import config from "@/lib/config"
 import ImageGallery from "@/components/image_gallery/ImageGallery";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "next-i18next";
 import { useSession } from "next-auth/react";
 import { getToken } from "next-auth/jwt";
 import { GetServerSidePropsContext } from "next";
-import { useProviderDataContext } from "@/context";
+import { PrismaClient, t_model } from "@prisma/client";
 
 const { Row, Col } = Grid;
+const prisma = new PrismaClient()
 
-const App: NextPageWithLayout = (props: any) => {
+const App: NextPageWithLayout = (props: any | { token: string, models: t_model[] }) => {
     useSession({ required: true })
 
-    const { token, providers } = props
-    const { setProviders } = useProviderDataContext()
+    const { token, models } = props
     const { t } = useTranslation('app')
     const didMount = useRef(false);
     const [repaintGallery, setRepaintGallery] = useState(0);
     const [isWorking, setIsWorking] = useState(false);
     const [prompt, setPrompt] = useState('');
-    const [model, setModel] = useState('openjourney');
-
-    setProviders(providers)
+    const [model, setModel] = useState('');
 
     useEffect(() => {
         didMount.current = true;
 
         return () => {
             setPrompt('')
-            setModel('openjourney')
+            setModel('')
             setIsWorking(false)
             didMount.current = false;
         }
@@ -87,11 +84,13 @@ const App: NextPageWithLayout = (props: any) => {
             <Row gutter={20} justify="center" align="start" className="mb-12">
                 <Col span={24}>
                     <Radio.Group type="button" name="model" value={model} onChange={setModel}>
-                        {config.models.map((model) => {
-                            return (
-                                <Radio key={model.name} value={model.name}>{model.desc}</Radio>
-                            )
-                        })}
+                        {
+                            models.map((model: t_model) => {
+                                return (
+                                    <Radio key={model.name} value={model.name}>{model.description}</Radio>
+                                )
+                            })
+                        }
                     </Radio.Group>
                 </Col>
             </Row>
@@ -122,9 +121,19 @@ App.getLayout = (page) => {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
     const token = await getToken({ req: context.req, raw: true, secret: process.env.JWT_SECRET })
+    const models = await prisma.t_model.findMany({
+        select: {
+            name: true,
+            description: true,
+        },
+        where: {
+            deleted_at: 0,
+        }
+    }).catch(async (e) => { await prisma.$disconnect(); throw e })
     return {
         props: {
             token,
+            models,
             ...(await serverSideTranslations(context.locale || '', ['common', 'locale_switcher', 'user_control', 'app'])),
         }
     }
