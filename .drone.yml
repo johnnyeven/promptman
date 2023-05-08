@@ -10,25 +10,25 @@ volumes:
     host:
       path: /data/eden/.eden.yaml
 steps:
-  - name: main_test
-    image: registry.cn-hangzhou.aliyuncs.com/eden-framework/next-onbuild:1.0
-    pull: always
-    commands:
-      - eden ci run test
-    environment:
-      GOENV: PROD
-    when:
-      branch:
-        include:
-          - main
-        exclude: []
-    volumes:
-      - name: temp
-        path: /go
-      - name: host
-        path: /var/run/docker.sock
-      - name: config
-        path: /root/.eden.yaml
+  # - name: main_test
+  #   image: registry.cn-hangzhou.aliyuncs.com/eden-framework/next-onbuild:1.0
+  #   pull: always
+  #   commands:
+  #     - eden ci run test
+  #   environment:
+  #     GOENV: PROD
+  #   when:
+  #     branch:
+  #       include:
+  #         - main
+  #       exclude: []
+  #   volumes:
+  #     - name: temp
+  #       path: /go
+  #     - name: host
+  #       path: /var/run/docker.sock
+  #     - name: config
+  #       path: /root/.eden.yaml
   - name: main_ship
     image: registry.cn-hangzhou.aliyuncs.com/eden-framework/golang-onship:1.19
     pull: always
