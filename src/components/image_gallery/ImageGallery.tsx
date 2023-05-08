@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import useWebSocket from 'react-use-websocket';
-import { Grid, Image } from "@arco-design/web-react";
+import { Grid, Image, Progress, Spin } from "@arco-design/web-react";
 import style from './ImageGallery.module.css';
+import Decimal from "decimal.js";
 const { Row, Col } = Grid;
 
 export interface IImageGallery {
@@ -10,13 +11,13 @@ export interface IImageGallery {
 
 const ImageGallery: React.FC<IImageGallery> = ({ token }) => {
     const didMount = useRef(false);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [taskContainer, setTaskContainer] = useState<any[][]>([]);
     const [unscheduledTasksId, setUnscheduledTasksId] = useState<number[]>([]);
 
     const socketUrl = process.env.WS_PROXY_URL || ''
-    const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(socketUrl, {
-        onOpen: () => console.log('opened'),
-        shouldReconnect: (closeEvent) => {
+    const { sendJsonMessage, lastJsonMessage } = useWebSocket(socketUrl, {
+        shouldReconnect: () => {
             return didMount.current === true
         },
         reconnectInterval: 5000,
@@ -36,8 +37,11 @@ const ImageGallery: React.FC<IImageGallery> = ({ token }) => {
                 'Authorization': `Bearer ${token}`
             }
         })
-            .then(response => response.json())
+            .then(response => {
+                return response.json()
+            })
             .then(data => {
+                setIsLoading(false)
                 let mapper = [];
                 let unscheduledTasksId: number[] = [];
                 for (let i = 0; i < data.data.length; i++) {
@@ -52,15 +56,18 @@ const ImageGallery: React.FC<IImageGallery> = ({ token }) => {
                 }
                 if (mapper.length > 0) setTaskContainer(mapper);
             })
-            .catch(error => console.log(error))
+            .catch(error => {
+                setIsLoading(false)
+                console.log(error)
+            })
         return () => {
             didMount.current = false
+            setIsLoading(true)
             setTaskContainer([])
         }
     }, [])
 
     useEffect(() => {
-        console.log('unscheduledTasksId: ' + unscheduledTasksId)
         for (let i = 0; i < unscheduledTasksId.length; i++) {
             sendJsonMessage({ task_id: unscheduledTasksId[i] });
         }
@@ -92,10 +99,11 @@ const ImageGallery: React.FC<IImageGallery> = ({ token }) => {
         setTaskContainer(tasks)
     }, [lastJsonMessage])
 
-    useEffect(() => {
-        console.log('readyState: ' + readyState)
-    }, [readyState])
-
+    if (isLoading) {
+        return <div className="flex w-full justify-center">
+            <Spin dot />
+        </div>
+    }
     return <>
         {
             taskContainer.map((row: any, index: number) => (
@@ -105,12 +113,20 @@ const ImageGallery: React.FC<IImageGallery> = ({ token }) => {
                             let parameter = JSON.parse(task.parameter)
                             if (task.status == 'INIT') {
                                 return <Col span={8} key={task.id}>
-                                    <div className={style['image-gallery-skeleton']}></div>
+                                    <div className={[style['image-gallery-skeleton'], 'flex', 'justify-center'].join(' ')}>
+                                        <div className={style['image-gallery-not-ready']}>
+                                            <Spin size={64} className={style['image-gallery-not-ready_content']} />
+                                        </div>
+                                    </div>
                                 </Col>
                             } else if (task.status == 'PROCESSING') {
+                                const currentStep = new Decimal(task.current_step || 0)
+                                const percent = currentStep.dividedBy(task.max_steps).mul(100).toNumber()
                                 return <Col span={8} key={task.id}>
-                                    <div className={style['image-gallery-skeleton']}>
-                                        <p>{task.current_step} / {task.max_steps}</p>
+                                    <div className={[style['image-gallery-skeleton'], 'flex', 'justify-center'].join(' ')}>
+                                        <div className={style['image-gallery-not-ready']}>
+                                            <Progress type='circle' percent={percent} className={style['image-gallery-not-ready_content']} />
+                                        </div>
                                     </div>
                                 </Col>
                             } else if (task.status == 'FINISHED') {

@@ -24,3 +24,9 @@
     display: block;
     clear: both;
 }
+.image-gallery-not-ready {
+    padding-top: 50%;
+}
+.image-gallery-not-ready_content {
+    margin-top: -50%
+}

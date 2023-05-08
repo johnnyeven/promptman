@@ -39,8 +39,8 @@ export default function NavMenu() {
         <Menu mode='horizontal' theme='dark' defaultSelectedKeys={[activatedKey]} style={{ borderBottom: 'rgb(50, 50, 50) 1px solid' }}>
             {
                 Object.values(MenuList).map((item) => (
-                    <MenuItem key={item.key}>
-                        <Link href={item.link}>{t(item.name)}</Link>
+                    <MenuItem key={item.key} style={{ padding: '0' }}>
+                        <Link href={item.link} style={{ display: 'block', width: '100%', height: '100%', padding: '0 12px' }}>{t(item.name)}</Link>
                     </MenuItem>
                 ))
             }

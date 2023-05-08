@@ -26,7 +26,7 @@ export default function LocaleSwitcher() {
                     const { pathname, query, asPath } = router
                     return (
                         <Option key={locale} value={locale}>
-                            <Link href={{ pathname, query }} as={asPath} locale={locale}>
+                            <Link href={{ pathname, query }} as={asPath} locale={locale} style={{ display: 'block', width: '100%', height: '100%' }}>
                                 {t('locale_switcher.' + locale)}
                             </Link>
                         </Option>
