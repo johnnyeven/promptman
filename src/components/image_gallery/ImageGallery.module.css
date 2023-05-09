@@ -6,7 +6,9 @@
         background-position: 0 0
     }
 }
-    
+.image-gallery-task {
+    margin-bottom: 20px;
+}
 .image-gallery-skeleton {
     width: 100%;
     border-radius: 8px;

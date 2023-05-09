@@ -42,19 +42,17 @@ const ImageGallery: React.FC<IImageGallery> = ({ token }) => {
             })
             .then(data => {
                 setIsLoading(false)
-                let mapper = [];
                 let unscheduledTasksId: number[] = [];
                 for (let i = 0; i < data.data.length; i++) {
-                    if (data.data[i].status != 'FINISHED') {
+                    if (data.data[i].status != 'FINISHED' && data.data[i].status != 'FAILED') {
                         unscheduledTasksId.push(data.data[i].id)
                     }
                 }
                 if (unscheduledTasksId.length > 0) setUnscheduledTasksId(unscheduledTasksId);
 
-                for (let i = 0; i < data.data.length; i += 3) {
-                    mapper.push(data.data.slice(i, i + 3));
+                if (data.data.length > 0) {
+                    setTaskContainer(data.data);
                 }
-                if (mapper.length > 0) setTaskContainer(mapper);
             })
             .catch(error => {
                 setIsLoading(false)
@@ -62,8 +60,6 @@ const ImageGallery: React.FC<IImageGallery> = ({ token }) => {
             })
         return () => {
             didMount.current = false
-            setIsLoading(true)
-            setTaskContainer([])
         }
     }, [])
 
@@ -104,52 +100,46 @@ const ImageGallery: React.FC<IImageGallery> = ({ token }) => {
             <Spin dot />
         </div>
     }
-    return <>
+    return <Row gutter={20} justify="start" align="start" className="mb-12">
         {
-            taskContainer.map((row: any, index: number) => (
-                <Row gutter={20} justify="start" align="start" className="mb-12" key={index}>
-                    {
-                        row.map((task: any) => {
-                            let parameter = JSON.parse(task.parameter)
-                            if (task.status == 'INIT') {
-                                return <Col span={8} key={task.id}>
-                                    <div className={[style['image-gallery-skeleton'], 'flex', 'justify-center'].join(' ')}>
-                                        <div className={style['image-gallery-not-ready']}>
-                                            <Spin size={64} className={style['image-gallery-not-ready_content']} />
-                                        </div>
-                                    </div>
-                                </Col>
-                            } else if (task.status == 'PROCESSING') {
-                                const currentStep = new Decimal(task.current_step || 0)
-                                const percent = currentStep.dividedBy(task.max_steps).mul(100).toNumber()
-                                return <Col span={8} key={task.id}>
-                                    <div className={[style['image-gallery-skeleton'], 'flex', 'justify-center'].join(' ')}>
-                                        <div className={style['image-gallery-not-ready']}>
-                                            <Progress type='circle' percent={percent} className={style['image-gallery-not-ready_content']} />
-                                        </div>
-                                    </div>
-                                </Col>
-                            } else if (task.status == 'FINISHED') {
-                                return <Col span={8} key={task.id}>
-                                    <Image
-                                        src={task.image1}
-                                        width="100%"
-                                        loader={true}
-                                        style={{ borderRadius: '8px' }}
-                                        title={parameter.prompt}
-                                    />
-                                </Col>
-                            } else {
-                                return <Col span={8} key={task.id}>
-                                    <div className={style['image-gallery-skeleton']}></div>
-                                </Col>
-                            }
-                        })
-                    }
-                </Row>
-            ))
+            taskContainer.map((task: any) => {
+                let parameter = JSON.parse(task.parameter)
+                if (task.status == 'INIT') {
+                    return <Col span={8} key={task.id} className={style['image-gallery-task']}>
+                        <div className={[style['image-gallery-skeleton'], 'flex', 'justify-center'].join(' ')}>
+                            <div className={style['image-gallery-not-ready']}>
+                                <Spin size={64} className={style['image-gallery-not-ready_content']} />
+                            </div>
+                        </div>
+                    </Col>
+                } else if (task.status == 'PROCESSING') {
+                    const currentStep = new Decimal(task.current_step || 0)
+                    const percent = currentStep.dividedBy(task.max_steps).mul(100).floor().toNumber()
+                    return <Col span={8} key={task.id} className={style['image-gallery-task']}>
+                        <div className={[style['image-gallery-skeleton'], 'flex', 'justify-center'].join(' ')}>
+                            <div className={style['image-gallery-not-ready']}>
+                                <Progress type='circle' percent={percent} className={style['image-gallery-not-ready_content']} />
+                            </div>
+                        </div>
+                    </Col>
+                } else if (task.status == 'FINISHED') {
+                    return <Col span={8} key={task.id} className={style['image-gallery-task']}>
+                        <Image
+                            src={task.image1}
+                            width="100%"
+                            loader={true}
+                            style={{ borderRadius: '8px' }}
+                            title={parameter.prompt}
+                        />
+                    </Col>
+                } else {
+                    return <Col span={8} key={task.id} className={style['image-gallery-task']}>
+                        <div className={style['image-gallery-skeleton']}></div>
+                    </Col>
+                }
+            })
         }
-    </>
+    </Row>
 }
 
 export default ImageGallery;
