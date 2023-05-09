@@ -6,8 +6,8 @@ import NavMenu from '../../../components/nav_menu';
 import styles from './PrimaryLayout.module.css';
 import "@arco-design/web-react/dist/css/arco.css";
 
-const Header = Layout.Header;
-const Content = Layout.Content;
+const Header = Layout.Header
+const Content = Layout.Content
 
 export interface IPrimaryLayout extends React.ComponentPropsWithoutRef<'div'> { }
 
@@ -34,6 +34,9 @@ const PrimaryLayout: React.FC<IPrimaryLayout> = ({ children }) => {
                 <Content className="flex min-h-screen flex-col items-center justify-between p-24">
                     {children}
                 </Content>
+                <div className="fixed right-5 bottom-2">
+                    <a href="//beian.miit.gov.cn">蜀ICP备2023010708号-1</a>
+                </div>
             </Layout>
         </>
     );
