@@ -1,5 +1,5 @@
 import NextAuth, { Account, Profile, User, SessionStrategy } from "next-auth"
-import GoogleProvider from "next-auth/providers/google"
+// import GoogleProvider from "next-auth/providers/google"
 import GithubProvider from "next-auth/providers/github"
 import EmailProvider from "next-auth/providers/email"
 import { JWT } from "next-auth/jwt"
@@ -34,13 +34,13 @@ export const authOptions = {
                 timeout: 60000
             },
         }),
-        GoogleProvider({
-            clientId: process.env.GOOGLE_AUTH_ID || '',
-            clientSecret: process.env.GOOGLE_AUTH_SECRET || '',
-            httpOptions: {
-                timeout: 60000
-            },
-        }),
+        // GoogleProvider({
+        //     clientId: process.env.GOOGLE_AUTH_ID || '',
+        //     clientSecret: process.env.GOOGLE_AUTH_SECRET || '',
+        //     httpOptions: {
+        //         timeout: 60000
+        //     },
+        // }),
     ],
     callbacks: {
         jwt: async (props: { token: JWT, account: Account | null, profile?: Profile }) => {

@@ -1,4 +1,7 @@
 {
+    "common": {
+        "title": "Prompaint.com"
+    },
     "navigation": {
         "home": "Home",
         "app": "App",

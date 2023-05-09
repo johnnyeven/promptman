@@ -5,6 +5,7 @@ import NavMenu from '../../../components/nav_menu';
 
 import styles from './PrimaryLayout.module.css';
 import "@arco-design/web-react/dist/css/arco.css";
+import { useTranslation } from "next-i18next";
 
 const Header = Layout.Header
 const Content = Layout.Content
@@ -12,6 +13,7 @@ const Content = Layout.Content
 export interface IPrimaryLayout extends React.ComponentPropsWithoutRef<'div'> { }
 
 const PrimaryLayout: React.FC<IPrimaryLayout> = ({ children }) => {
+    const { t } = useTranslation('common')
     return (
         <>
             <Head>
@@ -25,7 +27,7 @@ const PrimaryLayout: React.FC<IPrimaryLayout> = ({ children }) => {
                 <meta property="og:url" content="https://www.prompaint.com/" />
                 <meta property="og:site_name" content="Prompaint" />
                 <meta property="og:type" content="website" />
-                <title>{'胖胖提示词大师'}</title>
+                <title>{t("common.title")}</title>
             </Head>
             <Layout className={[styles.layout, "font-mono"]}>
                 <Header className="flex flex-col top-0 left-0 fixed w-full z-50">

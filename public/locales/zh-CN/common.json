@@ -1,4 +1,7 @@
 {
+    "common": {
+        "title": "胖胖提示词大师"
+    },
     "navigation": {
         "home": "首页",
         "app": "应用",
