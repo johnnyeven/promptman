@@ -8,7 +8,8 @@ datasource db {
 }
 
 model t_model {
-    name               String @id @db.VarChar(255)
+    index              Int    @id
+    name               String @db.VarChar(255)
     description        String @db.VarChar(255)
     api_type           Int    @default(0)
     api_entry          String @db.VarChar(255)

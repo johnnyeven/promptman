@@ -128,6 +128,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         },
         where: {
             deleted_at: 0,
+        },
+        orderBy: {
+            index: 'asc'
         }
     }).catch(async (e) => { await prisma.$disconnect(); throw e })
     return {
