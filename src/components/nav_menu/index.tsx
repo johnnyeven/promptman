@@ -26,11 +26,11 @@ export default function NavMenu() {
             name: 'navigation.editor',
             link: '/editor'
         },
-        '/gallery': {
-            key: '4',
-            name: 'navigation.gallery',
-            link: '/gallery'
-        }
+        // '/gallery': {
+        //     key: '4',
+        //     name: 'navigation.gallery',
+        //     link: '/gallery'
+        // }
     }
 
     const activatedKey = MenuList[route]?.key || '1'
