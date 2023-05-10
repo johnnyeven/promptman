@@ -58,7 +58,7 @@ steps:
         {
           "msgtype": "markdown",
           "markdown": {
-            "content": "#{{#success build.status}}✅{{else}}❌{{/success}} **{{ repo.owner }}/{{ repo.name }}** (Build #{{build.number}})\n
+            "content": "{{#success build.status}}✅{{else}}❌{{/success}} **{{ repo.owner }}/{{ repo.name }}** (Build #{{build.number}})\n
                         >**构建结果**: {{ build.status }}
                         >**构建详情**: [点击查看]({{ build.link }})
                         >**代码分支**: {{ build.branch }}
